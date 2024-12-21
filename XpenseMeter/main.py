@@ -4,6 +4,10 @@ from XpenseMeter.routes.user_auth_routes import router as user_router
 from XpenseMeter.routes.report_routes import router as report_router
 app = FastAPI()
 
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
+
 app.include_router(expense_router)
 app.include_router(user_router)
 app.include_router(report_router)
