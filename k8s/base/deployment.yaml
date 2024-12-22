@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: xpensemeter-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: xpensemeter
+  template:
+    metadata:
+      labels:
+        app: xpensemeter
+    spec:
+      containers:
+        - name: xpensemeter-app
+          image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/xpensemeter-repo:latest
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: xpensemeter-secrets
+                  key: DATABASE_URL
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: xpensemeter-secrets
+                  key: JWT_SECRET_KEY
+            - name: JWT_REFRESH_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: xpensemeter-secrets
+                  key: JWT_REFRESH_SECRET_KEY
+            - name: ALGORITHM
+              valueFrom:
+                secretKeyRef:
+                  name: xpensemeter-secrets
+                  key: ALGORITHM
+            - name: ACCESS_TOKEN_EXPIRATION_MINUTES
+              valueFrom:
+                secretKeyRef:
+                  name: xpensemeter-secrets
+                  key: ACCESS_TOKEN_EXPIRATION_MINUTES
+            - name: REFRESH_TOKEN_EXPIRE_MINUTES
+              valueFrom:
+                secretKeyRef:
+                  name: xpensemeter-secrets
+                  key: REFRESH_TOKEN_EXPIRE_MINUTES
+            - name: MY_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: xpensemeter-secrets
+                  key: MY_EMAIL
+            - name: EMAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: xpensemeter-secrets
+                  key: EMAIL_PASSWORD
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: xpensemeter-secrets
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: xpensemeter-secrets
+                  key: AWS_SECRET_ACCESS_KEY
+            - name: AWS_REGION
+              valueFrom:
+                secretKeyRef:
+                  name: xpensemeter-secrets
+                  key: AWS_REGION
+            - name: AWS_BUCKET
+              valueFrom:
+                secretKeyRef:
+                  name: xpensemeter-secrets
+                  key: AWS_BUCKET
