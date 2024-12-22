@@ -1,5 +1,0 @@
-resources:
-  - ../base/deployment.yaml
-  - ../base/service.yaml
-
-namespace: dev
