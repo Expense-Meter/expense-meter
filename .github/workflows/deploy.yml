@@ -40,9 +40,14 @@ jobs:
         run: |
           aws eks update-kubeconfig --name xpensemeter-cluster --region ${{ secrets.AWS_REGION }}
 
+      - name: Create prod namespace
+        run: |
+          kubectl create namespace prod || echo "Namespace already exists"
+
       - name: Create Kubernetes Secret for Environment Variables
         run: |
           kubectl create secret generic xpensemeter-secrets \
+            --namespace prod \
             --from-literal=DATABASE_URL=${{ secrets.DATABASE_URL }} \
             --from-literal=JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }} \
             --from-literal=JWT_REFRESH_SECRET_KEY=${{ secrets.JWT_REFRESH_SECRET_KEY }} \
