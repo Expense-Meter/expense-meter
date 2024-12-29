@@ -8,7 +8,6 @@ app = FastAPI()
 
 
 app.include_router(api_router)
-app.include_router(expense_router)
 app.include_router(report_router)
 
 if __name__ == "__main__":

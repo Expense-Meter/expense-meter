@@ -1,4 +1,3 @@
-from fastapi import Depends
 from sqlalchemy.orm import Session
 from XpenseMeter.db.models import User
 from XpenseMeter.schemas import UserCreate
@@ -15,8 +14,7 @@ def get_users(db: Session):
     Returns:
         List[User]: List of User objects
     """
-    expenses = db.query(User).all()
-    return expenses
+    return db.query(User).all()
 
 def get_user_by_email(db: Session, email: str):
     """
@@ -45,7 +43,7 @@ def create_user(db: Session, user_in: UserCreate) -> User:
     hashed_password = get_password_hash(user_in.password)
     db_user = User(
         email=user_in.email,
-        hashed_password=hashed_password,
+        password=hashed_password,
         preferences=user_in.preferences
     )
     db.add(db_user)
