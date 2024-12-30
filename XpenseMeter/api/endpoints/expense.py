@@ -37,9 +37,9 @@ async def add_expense(request: Request, expense_in: schemas.ExpenseCreate, db: S
     category_monthly_limit, category_total_amount_spent = crud.get_category_limit_status(db, user_id=request.state.user_id, category_id=category.id, category_name=expense_in.category)
     email_body = f'Limit Exceeded!!! \nYour limit was {category_monthly_limit} and you have spent {category_total_amount_spent}' if category_monthly_limit <= category_total_amount_spent else f'Currently you can spend {category_monthly_limit - category_total_amount_spent} in {expense_in.category}'
     email.send_email(
-        email=request.state.email,
         subject="XpenseMeter Alert",
-        body=email_body
+        body=email_body,
+        recipient=[request.state.email]
     )
     
     return expense_obj
