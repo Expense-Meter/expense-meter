@@ -46,6 +46,7 @@ async def sign_in(user_data: schemas.UserSignIn, db: Session = Depends(get_db)):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect password",
         )
-    access_token = create_access_token(data={"email": user.email})
-    refresh_token = create_refresh_token(data={"email": user.email})
+    token_data = {"email": user.email, "id": user.id}
+    access_token = create_access_token(data=token_data)
+    refresh_token = create_refresh_token(data=token_data)
     return {"access_token": access_token, "token_type": "bearer", "refresh_token": refresh_token}

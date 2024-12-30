@@ -29,7 +29,8 @@ def token_authentication_required(func: Callable):
         if not payload:
             raise HTTPException(status_code=401, detail="Invalid token or token has expired")
 
-        request.state.email = payload.get('email')
+        request.state.email = payload.get('email', None)
+        request.state.user_id = payload.get('id', None)
 
         return await func(request, *args, **kwargs)
 
