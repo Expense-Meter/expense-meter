@@ -1,6 +1,4 @@
 from fastapi import FastAPI
-from XpenseMeter.routes.expense_routes import router as expense_router
-from XpenseMeter.routes.user_auth_routes import router as user_router
 from XpenseMeter.routes.report_routes import router as report_router
 from XpenseMeter.api import api_router
 
