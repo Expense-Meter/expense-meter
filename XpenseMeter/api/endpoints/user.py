@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from sqlalchemy.orm import Session
 from typing import List
 from XpenseMeter import schemas, crud
@@ -11,15 +11,14 @@ router = APIRouter()
 
 @router.get("/", response_model=List[schemas.User])
 @token_authentication_required
-def read_users(db: Session = Depends(get_db)):
+async def read_users(request: Request, db: Session = Depends(get_db)):
     """
     Retrieve all users.
     """
-    users = crud.get_users(db)
-    return users
+    return crud.get_users(db)
 
 @router.post("/sign-up", response_model=schemas.User)
-def create_user(user_in: schemas.UserCreate, db: Session = Depends(get_db)):
+async def create_user(user_in: schemas.UserCreate, db: Session = Depends(get_db)):
     """
     Create a new user.
     """
@@ -29,11 +28,10 @@ def create_user(user_in: schemas.UserCreate, db: Session = Depends(get_db)):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Email already registered",
         )
-    user = crud.create_user(db=db, user_in=user_in)
-    return user
+    return crud.create_user(db=db, user_in=user_in)
 
 @router.post("/sign-in", response_model=schemas.Token)
-def sign_in(user_data: schemas.UserSignIn, db: Session = Depends(get_db)):
+async def sign_in(user_data: schemas.UserSignIn, db: Session = Depends(get_db)):
     """
     Sign in a user.
     """
@@ -43,7 +41,7 @@ def sign_in(user_data: schemas.UserSignIn, db: Session = Depends(get_db)):
             status_code=status.HTTP_404_NOT_FOUND,
             detail="User not found",
         )
-    if not verify_password(user_data.password, user.hashed_password):
+    if not verify_password(user_data.password, user.password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect password",
