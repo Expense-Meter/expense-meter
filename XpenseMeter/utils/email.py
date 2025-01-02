@@ -26,7 +26,7 @@ def send_email(
             sender = settings.MY_EMAIL
 
         destination = {
-                'ToAddresses': recipient
+            'ToAddresses': recipient
         }
         if cc:
             destination.update({'CcAddresses': cc})
